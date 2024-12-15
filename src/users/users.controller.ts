@@ -9,26 +9,25 @@ import {
   Ip,
   ParseIntPipe,
   DefaultValuePipe,
+  Patch,
 } from '@nestjs/common';
 import { CreateUserDto } from './dtos/createUser.dto';
+import { GetUsersParamDto } from './dtos/getUsersParam.dto';
+import { PatchUserDto } from './dtos/patchUser.dto';
 
 //http://localhost:3000/users
 
 @Controller('users')
 export class UsersController {
-  @Get('/:id') //'/:id?' - id is optional. If id is not provided, it will return all users
+  @Get('/:id?') //'/:id?' - id is optional. If id is not provided, it will return all users
   public getUsers(
-    @Param() params: any,
-    @Param('id', ParseIntPipe) id: number | undefined,
+    @Param() getUsersParamDto: GetUsersParamDto,
     @Query() query: any,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
   ) {
-    console.log(params);
+    console.log(getUsersParamDto);
     console.log(query);
-
-    console.log(typeof id);
-    console.log(id);
     console.log(limit);
     console.log(page);
     return 'You sent a get request to users endpoint';
@@ -46,5 +45,10 @@ export class UsersController {
     console.log(headers);
     console.log(ip);
     return 'You sent a post request to users endpoint';
+  }
+
+  @Patch()
+  public patchUser(@Body() patchUserDto: PatchUserDto) {
+    return patchUserDto;
   }
 }
