@@ -14,11 +14,15 @@ import {
 import { CreateUserDto } from './dtos/createUser.dto';
 import { GetUsersParamDto } from './dtos/getUsersParam.dto';
 import { PatchUserDto } from './dtos/patchUser.dto';
+import { UsersService } from './providers/users.service';
 
 //http://localhost:3000/users
 
 @Controller('users')
 export class UsersController {
+  //Injecting Users Service
+  constructor(private readonly usersService: UsersService) {}
+
   @Get('/:id?') //'/:id?' - id is optional. If id is not provided, it will return all users
   public getUsers(
     @Param() getUsersParamDto: GetUsersParamDto,
@@ -26,11 +30,7 @@ export class UsersController {
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
   ) {
-    console.log(getUsersParamDto);
-    console.log(query);
-    console.log(limit);
-    console.log(page);
-    return 'You sent a get request to users endpoint';
+    return this.usersService.findAll(getUsersParamDto, limit, page);
   }
 
   @Post()
